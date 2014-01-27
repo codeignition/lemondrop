@@ -8,7 +8,7 @@ class Lemondrop::Plugin < Adhearsion::Plugin
   # Configure the connection information to your Redis instance.
   config :lemondrop do
     uri         ''         , :desc => 'URI to the Redis instance. Use this or specify each piece of connection information separately below.'
-    username    ''         , :desc => 'valid database username'
+    user        ''         , :desc => 'valid database username'
     password    nil        , :desc => 'valid database password'
     host        'localhost', :desc => 'host where the database is running'
     port        6379       , :desc => 'port where the database is listening'
