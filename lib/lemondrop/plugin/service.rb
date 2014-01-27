@@ -8,13 +8,13 @@ class Lemondrop::Plugin::Service
     ##
     # Start the Redis connection with the configured database
     def start(config)
-      params = config.to_hash.select { |k,v| !v.nil? }
+      params = config.to_hash.select { |k, v| !v.nil? }
       unless params[:uri].nil? || params[:uri].empty?
-        uri = URI.parse params[:uri]
-        params[:username] = uri.user
-        params[:password] = uri.password
-        params[:hostname] = uri.hostname
-        params[:port] = uri.port || params[:port]
+        redis_uri         = URI.parse params[:uri]
+        params[:user]     = redis_uri.user
+        params[:password] = redis_uri.password
+        params[:host]     = redis_uri.host
+        params[:port]     = redis_uri.port || params[:port]
         params.delete :uri
       end
 
@@ -32,9 +32,9 @@ class Lemondrop::Plugin::Service
     #
     # @param params [Hash] Options to establish the Redis connection
     def establish_connection(params)
-      connection = ::Redis.new params
-      logger.info "Lemondrop connected to Redis at #{params[:host]}:#{params[:port]}"
-      connection
+      namespace = params.delete :namespace
+      logger.info "Lemondrop connected to Redis at #{params[:host]}:#{params[:port]}."
+      ::Redis::Namespace.new(namespace, redis: ::Redis.new(params))
     end
   end # class << self
 end # Service
